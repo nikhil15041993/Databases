@@ -212,3 +212,40 @@ You should see that both databases that we have created on the first node are re
 +--------------------+
 5 rows in set (0.001 sec
 ```
+
+
+## Setup Haproxy for Galera:
+
+Install haproxy load balancer if not installed already,
+
+```
+sudo apt-get update
+sudo apt-get install -y haproxy
+```
+update haproxy with new configurations.
+```
+sudo vim /etc/haproxy/haproxy.cfg
+```
+Add the below line in the haproxy configuration file.
+
+```
+# Galera Cluster Fontend configuration
+frontend galera_cluster_frontend
+bind *:3306
+mode tcp
+option tcplog
+default_backend galera_cluster_backend
+# Galera Cluster Backend configuration
+backend galera_cluster_backend
+mode tcp
+option tcpka
+balance leastconn
+option mysql-check user haproxy
+server db-server-01 ​ 172.31.15.157:3306 ​ check weight 1server
+db-server-02 ​ 172.31.10.235:3306 ​ check weight 1
+server db-server-03 ​ 172.31.9.237:3306 ​ check weight 1
+```
+```
+sudo systemctl restart haproxy
+sudo systemctl status haproxy
+```
