@@ -25,7 +25,6 @@ These commands will install and start MySQL, but will not prompt you to set a pa
 For fresh installations of MySQL, you’ll want to run the DBMS’s included security script. This script changes some of the less secure default options for things like remote root logins and sample users.
 
 
-```
 Warning: As of July 2022, an error will occur when you run the mysql_secure_installation script without some further configuration. The reason is that this script will attempt to set a password for the installation’s root MySQL account but, by default on Ubuntu installations, this account is not configured to connect using a password.
 
 Prior to July 2022, this script would silently fail after attempting to set the root account password and continue on with the rest of the prompts. However, as of this writing the script will return the following error after you enter and confirm a password:
@@ -62,5 +61,5 @@ This will mean that you can once again connect to MySQL as your root user using 
 Run the security script with sudo:
 
 ### sudo mysql_secure_installation
-```
+
 
