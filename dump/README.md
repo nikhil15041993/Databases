@@ -53,8 +53,97 @@ mysql -u root -ptecmint rsyslog < rsyslog.sql
 
 If you want to restore a database that already exists on the targeted machine, then you will need to use the mysqlimport command.
 
-# mysqlimport -u root -ptecmint rsyslog < rsyslog.sql
+```
+mysqlimport -u root -ptecmint rsyslog < rsyslog.sql
+```
+
+## Backup a PostgreSQL
+
+PostgreSQL provides the pg_dump utility to help you back up databases. It generates a database file with SQL commands in a format that can be easily restored in the future.
+
+To back up, a PostgreSQL database, start by logging into your database server, then switch to the Postgres user account, and run pg_dump as follows (replace tecmintdb with the name of the database you want to backup). By default, the output format is a plain-text SQL script file.
+
+```
+$ pg_dump tecmintdb > tecmintdb.sql
+```
+
+The pg_dump supports other output formats as well. You can specify the output format using the -F option, where c means custom format archive file, d means directory format archive, and t means tar format archive file: all formats are suitable for input into pg_restore.
+
+For example:
+```
+$ pg_dump -F c tecmintdb > tecmintdb.dump
+OR
+$ pg_dump -F t tecmintdb > tecmintdb.tar
+```
+To dump output in the directory output format, use the -f flag (which is used to specify the output file) to specify the target directory instead of a file. The directory which will be created by pg_dump must not exist.
+
+```
+$ pg_dump -F d tecmintdb -f tecmintdumpdir	
+```
+To back up all PostgreSQL databases, use the pg_dumpall tool as shown.
+
+```
+$ pg_dumpall > all_pg_dbs.sql
+```
+
+### Restore a PostgreSQL database
+
+To restore a PostgreSQL database, you can use the psql or pg_restore utilities. psql is used to restore text files created by pg_dump whereas pg_restore is used to restore a PostgreSQL database from an archive created by pg_dump in one of the non-plain-text formats (custom, tar, or directory).
+
+Here is an example of how to restore a plain text file dump:
+
+```
+$ psql tecmintdb < tecmintdb.sql
+```
+
+As mentioned above, a custom-format dump is not a script for pgsql, so it must be restored with pg_restore as shown.
+
+```
+$ pg_restore -d tecmintdb tecmintdb.dump
+OR
+$ pg_restore -d tecmintdb tecmintdb.tar
+OR
+$ pg_restore -d tecmintdb tecmintdumpdir
+```
+
+### Backup Large PostgreSQL Databases
+If the database you are backing up is large and you want to generate a fairly smaller output file, then you can run a compressed dump where you have to filter the output of pg_dump via a compression tool such as gzip or any of your favorite:
+
+```
+$ pg_dump tecmintdb | gzip > tecmintdb.gz
+```
+### Backup Remote PostgreSQL Databases
+
+pg_dump is a regular PostgreSQL client tool, it supports operations on remote database servers. To specify the remote database server pg_dump should contact, use the command-line options -h to specify the remote host and -p specifies the remote port the database server is listening on. Besides, use the -U flag to specify the database role name to connect as.
+
+Remember to replace 10.10.20.10 and 5432 and tecmintdb with your remote host IP address or hostname, database port, and database name respectively.
+
+```
+$ pg_dump -U tecmint -h 10.10.20.10 -p 5432 tecmintdb > tecmintdb.sql
+```
+
+it is also possible to dump a database directly from one server to another, use the pg_dump and psql utilities as shown.
+
+```
+$ pg_dump -U tecmint -h 10.10.20.10 tecmintdb | pqsl -U tecmint -h 10.10.20.30 tecmintdb
+```
+
+### Auto Backup PostgreSQL Database Using a Cron Job
 
 
+You can configure a cron job to automate PostgreSQL database backup as follows. Note that you need to run the following commands as the PostgreSQL superuser:
 
+```
+$ mkdir -p /srv/backups/databases
+```
+Next, run the following command to edit the crontab to add a new cron job.
 
+```
+$ crontab -e
+```
+Copy and paste the following line at the end of the crontab. You can use any of the dump formats explained above.
+
+```
+0 0 * * *  pg_dump  -U postgres tecmintdb > /srv/backups/postgres/tecmintdb.sql
+```
+Save the file and exit.
