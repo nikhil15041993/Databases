@@ -62,6 +62,8 @@ mysqlimport -u root -ptecmint rsyslog < rsyslog.sql
 ```
 pg_dump -Fc -h 127.0.0.1 -U user vyi_prod -f  prod.dump
 
+pg_restore -d <database> -h 127.0.0.1 -U user  dumpfile
+
 ```
 
 PostgreSQL provides the pg_dump utility to help you back up databases. It generates a database file with SQL commands in a format that can be easily restored in the future.
