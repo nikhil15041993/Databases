@@ -59,6 +59,11 @@ mysqlimport -u root -ptecmint rsyslog < rsyslog.sql
 
 ## Backup a PostgreSQL
 
+```
+pg_dump -Fc -h 127.0.0.1 -U user vyi_prod -f  prod.dump
+
+```
+
 PostgreSQL provides the pg_dump utility to help you back up databases. It generates a database file with SQL commands in a format that can be easily restored in the future.
 
 To back up, a PostgreSQL database, start by logging into your database server, then switch to the Postgres user account, and run pg_dump as follows (replace tecmintdb with the name of the database you want to backup). By default, the output format is a plain-text SQL script file.
