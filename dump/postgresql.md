@@ -54,3 +54,8 @@ You want instead:
  GRANT ALL PRIVILEGES ON TABLE side_adzone TO jerry;
  ```
  
+### backup to zip 
+
+```
+pg_dump -F c -f backup.tar.gz --inserts --column-inserts --username=nikhil --host=localhost test
+```
