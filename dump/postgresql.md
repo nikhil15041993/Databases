@@ -22,7 +22,22 @@ alter role <user-name> superuser;
 ```
 pg_dump --inserts --column-inserts --username=nikhil --host=localhost --port=5432 test > dbbackup.sql
 ```
+for dump all databases use following command.
+```
+su - postgres -c pg_dumpall > /var/lib/postgresql/dumpdata.sql
+```
 
+Dump Your Django Database and Load It into a New Project
+
+```
+python manage.py dumpdata  > data_dump.json
+```
+
+Dump Your Django Database with specific table use following command
+
+```
+python manage.py dumpdata master_models.Skill > data_dump.json
+```
 
 First... check that you have the lines permissioning to the myuser user in pg_hba.conf. For example:
 
