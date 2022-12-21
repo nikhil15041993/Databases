@@ -59,3 +59,9 @@ You want instead:
 ```
 pg_dump -F c -f backup.tar.gz --inserts --column-inserts --username=nikhil --host=localhost test
 ```
+
+### export table as CSV with headings on Postgresql
+
+```
+COPY <table name> to '/tmp/products_199.csv' delimiters',';
+```
