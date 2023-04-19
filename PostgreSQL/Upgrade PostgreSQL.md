@@ -30,6 +30,9 @@ you may get an output linkethis
 sudo pg_dropcluster 10 main --stop
 ```
 
+pg_createcluster 10 main to create new cluster folder  
+
+
 ## Stop all processes and services writing to the database. Stop the database:
 
  ```
